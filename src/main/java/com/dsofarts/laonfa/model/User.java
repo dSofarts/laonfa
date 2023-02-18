@@ -43,6 +43,8 @@ public class User implements UserDetails {
 
     @Column(name = "password", length = 1000)
     private String password;
+    @Transient
+    private String confirmPassword;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -57,6 +59,19 @@ public class User implements UserDetails {
     @PrePersist
     private void init() {
         dateOfCreated = LocalDateTime.now();
+    }
+
+    public boolean isAdmin() {
+        if (roles.contains(Role.ROLE_ADMIN)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean findProduct(Product product) {
+        if (products.contains(product)) {
+            return true;
+        } else return false;
     }
 
     // security

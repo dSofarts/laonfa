@@ -44,4 +44,10 @@ public class AdminController {
         userService.changeUserRoles(user, form);
         return "redirect:/admin";
     }
+
+    @GetMapping("/admin/user/delete/{id}")
+    public String userDelete(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+        return "redirect:/admin";
+    }
 }

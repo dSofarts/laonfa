@@ -2,6 +2,7 @@ package com.dsofarts.laonfa.controller;
 
 import com.dsofarts.laonfa.model.Product;
 import com.dsofarts.laonfa.service.ProductService;
+import com.dsofarts.laonfa.service.UserService;
 import java.io.IOException;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +19,22 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductController {
 
     private final ProductService productService;
+    private final UserService userService;
 
     @GetMapping("/")
     public String product(@RequestParam(name = "title", required = false) String title,
             Model model, Principal principal) {
         model.addAttribute("products", productService.listProducts(title));
-        model.addAttribute("user", productService.getUserByPrincipal(principal));
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "products";
     }
 
     @GetMapping("/product/{id}")
-    public String productInfo(@PathVariable Long id, Model model) {
+    public String productInfo(@PathVariable Long id, Model model, Principal principal)  {
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);
         model.addAttribute("images", product.getImages());
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "product-info";
     }
 

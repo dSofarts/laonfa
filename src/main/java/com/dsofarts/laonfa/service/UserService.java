@@ -3,6 +3,7 @@ package com.dsofarts.laonfa.service;
 import com.dsofarts.laonfa.enums.Role;
 import com.dsofarts.laonfa.model.User;
 import com.dsofarts.laonfa.repository.UserRepository;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,21 +23,27 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
 
-    public boolean createUser(User user) {
+    public String createUser(User user) {
         String email = user.getEmail();
+        String errorMessage = "OK";
+        if (!user.getPassword().equals(user.getConfirmPassword())) {
+            return "Пароли не совпадают.";
+        }
         if (userRepository.findByEmail(email) != null) {
-            return false;
+            return "Пользователь с email: " + email + " существует.";
         }
         user.setActive(false);
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(Role.ROLE_USER);
         userRepository.save(user);
-        String message = String.format("Привет, %s!\nДля активации вашего аккаунта пожалуйста перейдите по ссылке:\n"
-                + "http://localhost:8080/activate/%s", user.getName(), user.getActivationCode());
+        String message = String.format("""
+                Привет, %s!
+                Для активации вашего аккаунта пожалуйста перейдите по ссылке:
+                http://localhost:8080/activate/%s""", user.getName(), user.getActivationCode());
         mailService.send(user.getEmail(), "Код активации", message);
         log.info("Saving new User with email: {}", email);
-        return true;
+        return errorMessage;
     }
 
     public List<User> list() {
@@ -54,7 +61,9 @@ public class UserService {
                 log.info("Unban user with id = {}; email = {}", user.getId(), user.getEmail());
             }
         }
-        userRepository.save(user);
+        if (user != null) {
+            userRepository.save(user);
+        }
     }
 
     public void changeUserRoles(User user, Map<String, String> form) {
@@ -79,5 +88,16 @@ public class UserService {
         user.setActive(true);
         userRepository.save(user);
         return true;
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public User getUserByPrincipal(Principal principal) {
+        if (principal == null) {
+            return new User();
+        }
+        return userRepository.findByEmail(principal.getName());
     }
 }
