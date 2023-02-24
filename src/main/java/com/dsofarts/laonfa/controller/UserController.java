@@ -70,4 +70,16 @@ public class UserController {
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "login";
     }
+
+    @GetMapping("/profile")
+    public String profile(Model model, Principal principal) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        return "profile";
+    }
+
+    @GetMapping("/profile/add-product")
+    public String addProduct(Model model, Principal principal) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        return "add-product";
+    }
 }

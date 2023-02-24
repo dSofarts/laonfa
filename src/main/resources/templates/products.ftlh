@@ -7,12 +7,12 @@
           <div class="card">
               <#if product.previewImageId??>
                 <a href="/product/${product.id}"><img src="/images/${product.previewImageId}"
-                                                      class="card-img-top"
+                                                      class="card-img-top card-img-products"
                                                       alt="${product.title}"></a>
               </#if>
             <div class="card-body">
               <h6 class="card-title"><a href="/product/${product.id}">${product.title}</a></h6>
-              <h5 class="card-title">${product.price} &#8381;</h5>
+              <h5 class="card-title">${product.price}&nbsp;&#8381;</h5>
               <p class="card-text">${product.city}</p>
             </div>
           </div>

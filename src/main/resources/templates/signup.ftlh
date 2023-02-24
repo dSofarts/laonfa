@@ -25,8 +25,8 @@
         <input type="email" name="email" class="form-control" id="inputEmail" placeholder="name@example.com" required>
       </div>
       <div class="mb-2 form-group">
-        <label for="inputPhone" class="form-label">Телефон</label>
-        <input type="phone" name="phoneNumber" class="form-control" id="inputPhone" placeholder="+71234567890">
+        <label for="inputPhone" class="form-label">Телефон*</label>
+        <input type="tel" name="phoneNumber" class="form-control" id="inputPhone" placeholder="+71234567890" required>
       </div>
       <div class="mb-2 form-group">
         <label for="inputPassword1" class="form-label">Пароль*</label>
