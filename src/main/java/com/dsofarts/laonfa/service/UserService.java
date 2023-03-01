@@ -34,7 +34,7 @@ public class UserService {
         user.setActive(false);
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(Role.ROLE_ADMIN);
+        user.getRoles().add(Role.ROLE_USER);
         userRepository.save(user);
         String message = String.format("""
                 Привет, %s!
