@@ -2,7 +2,7 @@
 <@template.template user>
   <h3 class="main-title">Панель администратора</h3>
   <div class="table-responsive">
-    <table class="table table-sm table-hover caption-top">
+    <table class="table table-sm table-hover caption-top sortable">
       <caption>Список пользователей</caption>
       <tr>
         <th>ID</th>
@@ -34,4 +34,5 @@
         </#list>
     </table>
   </div>
+  <script type="text/javascript" src="/static/js/sorttable.js"></script>
 </@template.template>
