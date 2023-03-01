@@ -6,11 +6,8 @@ import com.dsofarts.laonfa.model.User;
 import com.dsofarts.laonfa.repository.UserRepository;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -94,9 +91,6 @@ public class UserService {
     }
 
     public void changeUserRoles(User user, String role) {
-        Set<String> roles = Arrays.stream(Role.values())
-                .map(Role::name)
-                .collect(Collectors.toSet());
         user.getRoles().clear();
         user.getRoles().add(Role.valueOf(role));
         userRepository.save(user);

@@ -2,9 +2,7 @@ package com.dsofarts.laonfa.service;
 
 import com.dsofarts.laonfa.model.Image;
 import com.dsofarts.laonfa.model.Product;
-import com.dsofarts.laonfa.model.User;
 import com.dsofarts.laonfa.repository.ProductRepository;
-import com.dsofarts.laonfa.repository.UserRepository;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -63,7 +61,7 @@ public class ProductService {
         return image;
     }
 
-    public void delete(Long id) {;
+    public void delete(Long id) {
         productRepository.deleteById(id);
     }
 

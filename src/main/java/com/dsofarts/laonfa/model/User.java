@@ -63,16 +63,11 @@ public class User implements UserDetails {
     }
 
     public boolean isAdmin() {
-        if (roles.contains(Role.ROLE_ADMIN)) {
-            return true;
-        }
-        return false;
+        return roles.contains(Role.ROLE_ADMIN);
     }
 
     public boolean findProduct(Product product) {
-        if (products.contains(product)) {
-            return true;
-        } else return false;
+        return products.contains(product);
     }
 
     public void addImageToUser(Image image) {

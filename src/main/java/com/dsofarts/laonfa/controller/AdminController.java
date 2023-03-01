@@ -4,7 +4,6 @@ import com.dsofarts.laonfa.enums.Role;
 import com.dsofarts.laonfa.model.User;
 import com.dsofarts.laonfa.service.UserService;
 import java.security.Principal;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
