@@ -2,7 +2,7 @@
 <@template.template user>
   <div class="row">
     <div class="col-3">
-      <img src="<#if user.avatar??>user/images/${user.avatar}<#else>/static/images/no-image.png</#if>" alt="${user.name}" id="preview-images" class="mb-3">
+      <img src="<#if user.avatar??>/images/${user.avatar.id}<#else>/static/images/no-image.png</#if>" alt="${user.name}" id="preview-images" class="mb-3">
       <h4>${user.name}</h4>
       <hr>
       <nav class="vertical-nav">

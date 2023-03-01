@@ -2,6 +2,7 @@ package com.dsofarts.laonfa.controller;
 
 import com.dsofarts.laonfa.model.User;
 import com.dsofarts.laonfa.service.UserService;
+import java.io.IOException;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -81,5 +84,21 @@ public class UserController {
     public String addProduct(Model model, Principal principal) {
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "add-product";
+    }
+
+    @GetMapping("/profile/settings")
+    public String settings(Model model, Principal principal) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        return "settings";
+    }
+
+    @PostMapping("/profile/settings/change")
+    public String changeSettings(@RequestParam("file1") MultipartFile file1, User changeUser, Model model, Principal principal)
+            throws IOException {
+        User currentUser = userService.getUserByPrincipal(principal);
+        userService.changeUserSettings(currentUser, changeUser, file1);
+        model.addAttribute("user", currentUser);
+        model.addAttribute("message", "Данные успешно изменены");
+        return "redirect:/profile/settings";
     }
 }

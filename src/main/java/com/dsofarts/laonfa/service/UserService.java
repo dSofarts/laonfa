@@ -1,12 +1,13 @@
 package com.dsofarts.laonfa.service;
 
 import com.dsofarts.laonfa.enums.Role;
+import com.dsofarts.laonfa.model.Image;
 import com.dsofarts.laonfa.model.User;
 import com.dsofarts.laonfa.repository.UserRepository;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -35,7 +37,7 @@ public class UserService {
         user.setActive(false);
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(Role.ROLE_USER);
+        user.getRoles().add(Role.ROLE_ADMIN);
         userRepository.save(user);
         String message = String.format("""
                 Привет, %s!
@@ -44,6 +46,31 @@ public class UserService {
         mailService.send(user.getEmail(), "Код активации", message);
         log.info("Saving new User with email: {}", email);
         return errorMessage;
+    }
+
+    public void changeUserSettings(User currentUser, User changeUser, MultipartFile avatar)
+            throws IOException {
+        if (avatar.getSize() != 0) {
+            Image image = toImageEntity(avatar);
+            currentUser.addImageToUser(image);
+        }
+        if (!changeUser.getName().equals("")) {
+            currentUser.setName(changeUser.getName());
+        }
+        if (!changeUser.getPhoneNumber().equals("")) {
+            currentUser.setPhoneNumber(changeUser.getPhoneNumber());
+        }
+        userRepository.save(currentUser);
+    }
+
+    private Image toImageEntity(MultipartFile file) throws IOException {
+        Image image = new Image();
+        image.setName(file.getName());
+        image.setOriginalFileName(file.getOriginalFilename());
+        image.setContentType(file.getContentType());
+        image.setSize(file.getSize());
+        image.setBytes(file.getBytes());
+        return image;
     }
 
     public List<User> list() {

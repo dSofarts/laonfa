@@ -63,7 +63,7 @@
             <p class="text-muted"><small>ID пользователя: ${product.user.id}</small></p>
           </div>
           <div class="col-lg-4 col-2">
-            <img src="<#if product.user.avatar??>user/images/${product.user.avatar}<#else>/static/images/no-image.png</#if>" alt="${product.user.name}" id="preview-images-product" class="mb-3">
+            <img src="<#if product.user.avatar??>/images/${product.user.avatar.id}<#else>/static/images/no-image.png</#if>" alt="${product.user.name}" id="preview-images-product" class="mb-3">
           </div>
         </div>
         <#if user.isAdmin() || user.findProduct(product)>

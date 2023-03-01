@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,8 +38,8 @@ public class User implements UserDetails {
     @Column(name = "activation_code")
     private String activationCode;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "image_id")
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Image avatar;
 
     @Column(name = "password", length = 1000)
@@ -72,6 +73,11 @@ public class User implements UserDetails {
         if (products.contains(product)) {
             return true;
         } else return false;
+    }
+
+    public void addImageToUser(Image image) {
+        image.setUser(this);
+        setAvatar(image);
     }
 
     // security

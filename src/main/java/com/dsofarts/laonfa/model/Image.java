@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import java.sql.Types;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
@@ -39,6 +41,11 @@ public class Image {
     @JdbcTypeCode(Types.BINARY)
     public byte[] bytes;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private Product product;
+
+    @ToString.Exclude
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User user;
 }
