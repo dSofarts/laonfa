@@ -12,6 +12,7 @@
         <a href="/profile/add-product" class="vertical-nav-item active-link">Добавить
           объявление</a>
         <a href="/profile/settings" class="vertical-nav-item">Настройки</a>
+        <#if user.isAdmin()><a href="/admin" class="vertical-nav-item">Панель администратора</a></#if>
       </nav>
     </div>
     <div class="col-9">

@@ -66,16 +66,12 @@ public class UserService {
         }
     }
 
-    public void changeUserRoles(User user, Map<String, String> form) {
+    public void changeUserRoles(User user, String role) {
         Set<String> roles = Arrays.stream(Role.values())
                 .map(Role::name)
                 .collect(Collectors.toSet());
         user.getRoles().clear();
-        for (String key : form.keySet()) {
-            if (roles.contains(key)) {
-                user.getRoles().add(Role.valueOf(key));
-            }
-        }
+        user.getRoles().add(Role.valueOf(role));
         userRepository.save(user);
     }
 

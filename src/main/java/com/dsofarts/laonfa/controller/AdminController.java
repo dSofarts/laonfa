@@ -3,6 +3,7 @@ package com.dsofarts.laonfa.controller;
 import com.dsofarts.laonfa.enums.Role;
 import com.dsofarts.laonfa.model.User;
 import com.dsofarts.laonfa.service.UserService;
+import java.security.Principal;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +22,8 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("/admin")
-    public String admin(Model model) {
+    public String admin(Principal principal, Model model) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("users", userService.list());
         return "admin";
     }
@@ -33,15 +35,16 @@ public class AdminController {
     }
 
     @GetMapping("/admin/user/edit/{user}")
-    public String userEdit(@PathVariable("user") User user, Model model) {
+    public String userEdit(@PathVariable("user") User user, Model model, Principal principal) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
         return "user-edit";
     }
 
     @PostMapping("/admin/user/edit")
-    public String userEdit(@RequestParam("userId") User user, @RequestParam Map<String, String> form) {
-        userService.changeUserRoles(user, form);
+    public String userEdit(@RequestParam("userId") User user, @RequestParam("roles") String role) {
+        userService.changeUserRoles(user, role);
         return "redirect:/admin";
     }
 
