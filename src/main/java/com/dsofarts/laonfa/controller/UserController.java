@@ -5,6 +5,7 @@ import com.dsofarts.laonfa.service.UserService;
 import java.io.IOException;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.Banner.Mode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,8 @@ public class UserController {
     @GetMapping("/login/error")
     public String loginError(Principal principal, Model model) {
         model.addAttribute("user", userService.getUserByPrincipal(principal));
-        model.addAttribute("message", "Имя пользователя или пароль введены неверно. Или аккаунт заблокирован");
+        model.addAttribute("message",
+                "Имя пользователя или пароль введены неверно. Или аккаунт заблокирован");
         model.addAttribute("messageType", "danger");
         return "login";
     }
@@ -47,7 +49,8 @@ public class UserController {
             model.addAttribute("messageType", "danger");
             return "signup";
         }
-        model.addAttribute("message", "Необходимо подтвердить адрес электронной почты для выхода в аккаунт");
+        model.addAttribute("message",
+                "Необходимо подтвердить адрес электронной почты для выхода в аккаунт");
         model.addAttribute("messageType", "warning");
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "signup";
@@ -92,13 +95,32 @@ public class UserController {
         return "settings";
     }
 
-    @PostMapping("/profile/settings/change")
-    public String changeSettings(@RequestParam("file1") MultipartFile file1, User changeUser, Model model, Principal principal)
+    @PostMapping("/profile/settings")
+    public String changeSettings(@RequestParam("file1") MultipartFile file1, User changeUser,
+            Model model, Principal principal)
             throws IOException {
         User currentUser = userService.getUserByPrincipal(principal);
         userService.changeUserSettings(currentUser, changeUser, file1);
         model.addAttribute("user", currentUser);
         model.addAttribute("message", "Данные успешно изменены");
-        return "redirect:/profile/settings";
+        model.addAttribute("messageType", "success");
+        return "settings";
+    }
+
+    @PostMapping("/profile/settings/password")
+    public String changePassword(@RequestParam("oldPassword") String oldPassword,
+            @RequestParam("password") String password,
+            @RequestParam("confirmPassword") String confirmPassword, Model model,
+            Principal principal) {
+        User user = userService.getUserByPrincipal(principal);
+        if (userService.changePassword(user, oldPassword, password, confirmPassword)) {
+            model.addAttribute("message", "Данные успешно изменены");
+            model.addAttribute("messageType", "success");
+        } else {
+            model.addAttribute("message", "Пароль веден неверно или пароли не совпадают!");
+            model.addAttribute("messageType", "warning");
+        }
+        model.addAttribute("user", user);
+        return "settings";
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
@@ -48,8 +49,7 @@ public class UserService {
     public void changeUserSettings(User currentUser, User changeUser, MultipartFile avatar)
             throws IOException {
         if (avatar.getSize() != 0) {
-            Image image = toImageEntity(avatar);
-            currentUser.addImageToUser(image);
+            currentUser.addImageToUser(toImageEntity(avatar));
         }
         if (!changeUser.getName().equals("")) {
             currentUser.setName(changeUser.getName());
@@ -82,6 +82,7 @@ public class UserService {
                 log.info("Ban user with id = {}; email = {}", user.getId(), user.getEmail());
             } else {
                 user.setActive(true);
+                user.setActivationCode(null);
                 log.info("Unban user with id = {}; email = {}", user.getId(), user.getEmail());
             }
         }
@@ -116,5 +117,22 @@ public class UserService {
             return new User();
         }
         return userRepository.findByEmail(principal.getName());
+    }
+
+    public boolean changePassword(User user, String oldPassword, String password,
+            String confirmPassword) {
+        if (passwordEncoder.matches(oldPassword, user.getPassword()) && password.equals(
+                confirmPassword)) {
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+            String message = String.format("""
+                    Уважаемый %s!
+                    На вашем аккаунте был изменен пароль!
+                    Если это были не вы, свяжитесь со службой поддержки!
+                    """, user.getName());
+            mailService.send(user.getEmail(), "Уведомление от службы безопасности", message);
+            return true;
+        }
+        return true;
     }
 }
