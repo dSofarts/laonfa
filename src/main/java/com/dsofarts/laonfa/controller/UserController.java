@@ -5,7 +5,6 @@ import com.dsofarts.laonfa.service.UserService;
 import java.io.IOException;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.Banner.Mode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
