@@ -18,7 +18,7 @@ Java 17, Maven, Spring Boot 3.0.2, Spring Web, PostgreSQL, Spring Data JPA, Free
     spring.datasource.username=username
     spring.datasource.password=password
 
-Далее необходимо заполнить ифнормацию об электрнной почте, с которой приходят сообщения пользователям. Пример заполнения: 
+Далее необходимо заполнить информацию об электронной почте, с которой приходят сообщения пользователям. Пример заполнения: 
 
     spring.mail.host=smtp.email.com
     spring.mail.username=email@email.com
